@@ -227,6 +227,16 @@ public class SunriseStepMeta extends BaseStepMeta implements StepMetaInterface {
           PKG, "SunriseStep.CheckResult.InputLongitudeOK" ), stepMeta );
     }
     remarks.add( cr );
+
+    if ( Const.isEmpty( getTimeZone() ) ) {
+      cr =
+        new CheckResult( CheckResult.TYPE_RESULT_WARNING, BaseMessages.getString(
+          PKG, "SunriseStep.CheckResult.TimeZoneNotSpecified" ), stepMeta );
+    } else {
+      cr =
+        new CheckResult( CheckResult.TYPE_RESULT_OK, BaseMessages.getString(
+          PKG, "SunriseStep.CheckResult.TimeZoneSpecified" ), stepMeta );
+    }
   }
 
   public String getInputFieldnameDate() {
