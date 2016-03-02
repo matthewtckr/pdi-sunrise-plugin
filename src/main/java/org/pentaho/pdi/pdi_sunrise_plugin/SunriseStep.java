@@ -101,7 +101,7 @@ public class SunriseStep extends BaseStep implements StepInterface {
       }
       if ( data.indexInputLongitude < 0 ) {
         setErrors( 1 );
-        logError( BaseMessages.getString( PKG, "SunriseStep.Error.MissingInputLatitude",
+        logError( BaseMessages.getString( PKG, "SunriseStep.Error.MissingInputLongitude",
           meta.getInputFieldnameLongitude() ) );
         setOutputDone();
         return false;

@@ -25,6 +25,8 @@ package org.pentaho.pdi.pdi_sunrise_plugin;
 import java.util.List;
 import java.util.TimeZone;
 
+import org.pentaho.di.core.CheckResult;
+import org.pentaho.di.core.CheckResultInterface;
 import org.pentaho.di.core.Const;
 import org.pentaho.di.core.annotations.Step;
 import org.pentaho.di.core.database.DatabaseMeta;
@@ -180,6 +182,47 @@ public class SunriseStepMeta extends BaseStepMeta implements StepMetaInterface {
     rep.saveStepAttribute( id_transformation, id_step, "outputFieldnameSunsetCivil", outputFieldnameSunsetCivil );
     rep.saveStepAttribute( id_transformation, id_step, "outputFieldnameSunsetNautical", outputFieldnameSunsetNautical );
     rep.saveStepAttribute( id_transformation, id_step, "outputFieldnameSunsetOfficial", outputFieldnameSunsetOfficial );
+  }
+
+  @Override
+  public void check( List<CheckResultInterface> remarks, TransMeta transMeta, StepMeta stepMeta, RowMetaInterface prev,
+      String[] input, String[] output, RowMetaInterface info, VariableSpace space, Repository repository,
+      IMetaStore metaStore ) {
+    super.check( remarks, transMeta, stepMeta, prev, input, output, info, space, repository, metaStore );
+    CheckResult cr;
+
+    if ( Const.isEmpty( getInputFieldnameDate() ) || prev.indexOfValue( getInputFieldnameDate() ) < 0  ) {
+      cr =
+        new CheckResult( CheckResult.TYPE_RESULT_ERROR, BaseMessages.getString(
+          PKG, "SunriseStep.CheckResult.InputDateMissing" ), stepMeta );
+    } else {
+      cr =
+        new CheckResult( CheckResult.TYPE_RESULT_OK, BaseMessages.getString(
+          PKG, "SunriseStep.CheckResult.InputDateOK" ), stepMeta );
+    }
+    remarks.add( cr );
+
+    if ( Const.isEmpty( getInputFieldnameLatitude() ) || prev.indexOfValue( getInputFieldnameLatitude() ) < 0  ) {
+      cr =
+        new CheckResult( CheckResult.TYPE_RESULT_ERROR, BaseMessages.getString(
+          PKG, "SunriseStep.CheckResult.InputLatitudeMissing" ), stepMeta );
+    } else {
+      cr =
+        new CheckResult( CheckResult.TYPE_RESULT_OK, BaseMessages.getString(
+          PKG, "SunriseStep.CheckResult.InputLatitudeOK" ), stepMeta );
+    }
+    remarks.add( cr );
+
+    if ( Const.isEmpty( getInputFieldnameLongitude() ) || prev.indexOfValue( getInputFieldnameLongitude() ) < 0  ) {
+      cr =
+        new CheckResult( CheckResult.TYPE_RESULT_ERROR, BaseMessages.getString(
+          PKG, "SunriseStep.CheckResult.InputLongitudeMissing" ), stepMeta );
+    } else {
+      cr =
+        new CheckResult( CheckResult.TYPE_RESULT_OK, BaseMessages.getString(
+          PKG, "SunriseStep.CheckResult.InputLongitudeOK" ), stepMeta );
+    }
+    remarks.add( cr );
   }
 
   public String getInputFieldnameDate() {
