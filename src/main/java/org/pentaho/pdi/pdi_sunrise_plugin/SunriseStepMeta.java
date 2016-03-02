@@ -79,6 +79,7 @@ public class SunriseStepMeta extends BaseStepMeta implements StepMetaInterface {
   private String outputFieldnameSunsetOfficial;
 
   public void setDefault() {
+    setTimeZone( "GMT" );
     setOutputFieldnameSunriseAstronomical( "Sunrise_Astronomical" );
     setOutputFieldnameSunriseCivil( "Sunrise_Civil" );
     setOutputFieldnameSunriseNautical( "Sunrise_Nautical" );
@@ -120,7 +121,10 @@ public class SunriseStepMeta extends BaseStepMeta implements StepMetaInterface {
   public void getFields( RowMetaInterface inputRowMeta, String name, RowMetaInterface[] info, StepMeta nextStep,
       VariableSpace space, Repository repository, IMetaStore metaStore ) throws KettleStepException {
     super.getFields( inputRowMeta, name, info, nextStep, space, repository, metaStore );
-    TimeZone outputTZ = TimeZone.getTimeZone( getTimeZone() );
+    TimeZone outputTZ = TimeZone.getTimeZone( "GMT" );
+    if ( getTimeZone() != null ) {
+      outputTZ = TimeZone.getTimeZone( getTimeZone() );
+    }
     addFieldToRow( inputRowMeta, outputFieldnameSunriseAstronomical, ValueMetaInterface.TYPE_DATE, outputTZ );
     addFieldToRow( inputRowMeta, outputFieldnameSunriseCivil, ValueMetaInterface.TYPE_DATE, outputTZ );
     addFieldToRow( inputRowMeta, outputFieldnameSunriseNautical, ValueMetaInterface.TYPE_DATE, outputTZ );

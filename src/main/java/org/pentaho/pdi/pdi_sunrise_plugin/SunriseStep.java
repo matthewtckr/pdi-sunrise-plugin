@@ -24,6 +24,7 @@ package org.pentaho.pdi.pdi_sunrise_plugin;
 
 import java.util.Date;
 
+import org.pentaho.di.core.Const;
 import org.pentaho.di.core.exception.KettleException;
 import org.pentaho.di.core.row.RowDataUtil;
 import org.pentaho.di.i18n.BaseMessages;
@@ -113,7 +114,7 @@ public class SunriseStep extends BaseStep implements StepInterface {
     data.resetCalculator(
       getInputRowMeta().getNumber( row, data.indexInputLatitude ),
       getInputRowMeta().getNumber( row, data.indexInputLongitude ),
-      meta.getTimeZone() );
+      Const.NVL( meta.getTimeZone(), "GMT" ) );
 
     Date inputDate = getInputRowMeta().getDate( row, data.indexInputDate );
     if ( data.indexOutputSunriseAstronomical >= 0 ) {
