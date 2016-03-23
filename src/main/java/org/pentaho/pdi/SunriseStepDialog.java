@@ -1,26 +1,22 @@
-/*! ******************************************************************************
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Pentaho Data Integration
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- * Copyright (C) 2016-2016 by Pentaho : http://www.pentaho.com
- *
- *******************************************************************************
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- ******************************************************************************/
-
-package org.pentaho.pdi.pdi_sunrise_plugin;
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.pentaho.pdi;
 
 import java.util.Arrays;
 import java.util.TimeZone;
@@ -28,23 +24,11 @@ import java.util.TimeZone;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.ShellAdapter;
-import org.eclipse.swt.events.ShellEvent;
+import org.eclipse.swt.events.*;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.*;
 import org.pentaho.di.core.Const;
 import org.pentaho.di.core.Props;
 import org.pentaho.di.core.exception.KettleException;
@@ -60,32 +44,34 @@ import org.pentaho.di.ui.trans.step.BaseStepDialog;
 
 public class SunriseStepDialog extends BaseStepDialog implements StepDialogInterface {
 
-  private static final Class<?> PKG = SunriseStepMeta.class;
-  private SunriseStepMeta input;
+  private static Class<?> PKG = SunriseStepMeta.class; // for i18n purposes, needed by Translator2!!   $NON-NLS-1$
+
+  private SunriseStepMeta meta;
 
   private LabelCombo inputFieldDate, inputFieldLatitude, inputFieldLongitude, inputFieldTimeZone;
   private LabelText outputSunriseAstronomical, outputSunriseCivil, outputSunriseNautical, outputSunriseOfficial;
   private LabelText outputSunsetAstronomical, outputSunsetCivil, outputSunsetNautical, outputSunsetOfficial;
 
-  public SunriseStepDialog( Shell parent, Object baseStepMeta, TransMeta transMeta, String stepname ) {
-    super( parent, (BaseStepMeta) baseStepMeta, transMeta, stepname );
-    input = (SunriseStepMeta) baseStepMeta;
+  public SunriseStepDialog( Shell parent, Object stepMeta, TransMeta transMeta, String stepname ) {
+    super( parent, (BaseStepMeta) stepMeta, transMeta, stepname );
+    meta = (SunriseStepMeta) stepMeta;
   }
 
+  @Override
   public String open() {
     Shell parent = getParent();
     Display display = parent.getDisplay();
 
     shell = new Shell( parent, SWT.DIALOG_TRIM | SWT.RESIZE | SWT.MIN | SWT.MAX );
     props.setLook( shell );
-    setShellImage( shell, input );
+    setShellImage( shell, meta );
 
     ModifyListener lsMod = new ModifyListener() {
       public void modifyText( ModifyEvent e ) {
-        input.setChanged();
+        meta.setChanged();
       }
     };
-    changed = input.hasChanged();
+    changed = meta.hasChanged();
 
     FormLayout formLayout = new FormLayout();
     formLayout.marginWidth = Const.FORM_MARGIN;
@@ -379,7 +365,7 @@ public class SunriseStepDialog extends BaseStepDialog implements StepDialogInter
     setSize();
 
     getData();
-    input.setChanged( changed );
+    meta.setChanged( changed );
 
     shell.open();
     while ( !shell.isDisposed() ) {
@@ -388,46 +374,6 @@ public class SunriseStepDialog extends BaseStepDialog implements StepDialogInter
       }
     }
     return stepname;
-  }
-
-  /**
-   * Copy information from the meta-data input to the dialog fields.
-   */
-  public void getData() {
-    inputFieldDate.setText( Const.NVL( input.getInputFieldnameDate(), "" ) );
-    inputFieldLatitude.setText( Const.NVL( input.getInputFieldnameLatitude(), "" ) );
-    inputFieldLongitude.setText( Const.NVL( input.getInputFieldnameLongitude(), "" ) );
-    inputFieldTimeZone.setText( Const.NVL( input.getTimeZone(), "" ) );
-    
-    outputSunriseAstronomical.setText( Const.NVL( input.getOutputFieldnameSunriseAstronomical(), "" ) );
-    outputSunriseCivil.setText( Const.NVL( input.getOutputFieldnameSunriseCivil(), "" ) );
-    outputSunriseNautical.setText( Const.NVL( input.getOutputFieldnameSunriseNautical(), "" ) );
-    outputSunriseOfficial.setText( Const.NVL( input.getOutputFieldnameSunriseOfficial(), "" ) );
-    outputSunsetAstronomical.setText( Const.NVL( input.getOutputFieldnameSunsetAstronomical(), "" ) );
-    outputSunsetCivil.setText( Const.NVL( input.getOutputFieldnameSunsetCivil(), "" ) );
-    outputSunsetNautical.setText( Const.NVL( input.getOutputFieldnameSunsetNautical(), "" ) );
-    outputSunsetOfficial.setText( Const.NVL( input.getOutputFieldnameSunsetOfficial(), "" ) );
-
-    wStepname.selectAll();
-    wStepname.setFocus();
-  }
-
-  private void cancel() {
-    stepname = null;
-    input.setChanged( changed );
-    dispose();
-  }
-
-  private void ok() {
-
-    if ( Const.isEmpty( wStepname.getText() ) ) {
-      return;
-    }
-
-    // Get the information for the dialog into the input structure.
-    getInfo( input );
-
-    dispose();
   }
 
   private void getInfo( SunriseStepMeta inf ) {
@@ -446,6 +392,28 @@ public class SunriseStepDialog extends BaseStepDialog implements StepDialogInter
     inf.setOutputFieldnameSunsetOfficial( outputSunsetOfficial.getText() );
 
     stepname = wStepname.getText(); // return value
+  }
+
+  /**
+   * Copy information from the meta-data input to the dialog fields.
+   */
+  public void getData() {
+    inputFieldDate.setText( Const.NVL( meta.getInputFieldnameDate(), "" ) );
+    inputFieldLatitude.setText( Const.NVL( meta.getInputFieldnameLatitude(), "" ) );
+    inputFieldLongitude.setText( Const.NVL( meta.getInputFieldnameLongitude(), "" ) );
+    inputFieldTimeZone.setText( Const.NVL( meta.getTimeZone(), "" ) );
+    
+    outputSunriseAstronomical.setText( Const.NVL( meta.getOutputFieldnameSunriseAstronomical(), "" ) );
+    outputSunriseCivil.setText( Const.NVL( meta.getOutputFieldnameSunriseCivil(), "" ) );
+    outputSunriseNautical.setText( Const.NVL( meta.getOutputFieldnameSunriseNautical(), "" ) );
+    outputSunriseOfficial.setText( Const.NVL( meta.getOutputFieldnameSunriseOfficial(), "" ) );
+    outputSunsetAstronomical.setText( Const.NVL( meta.getOutputFieldnameSunsetAstronomical(), "" ) );
+    outputSunsetCivil.setText( Const.NVL( meta.getOutputFieldnameSunsetCivil(), "" ) );
+    outputSunsetNautical.setText( Const.NVL( meta.getOutputFieldnameSunsetNautical(), "" ) );
+    outputSunsetOfficial.setText( Const.NVL( meta.getOutputFieldnameSunsetOfficial(), "" ) );
+
+    wStepname.selectAll();
+    wStepname.setFocus();
   }
 
   private void setComboValues() {
@@ -471,5 +439,23 @@ public class SunriseStepDialog extends BaseStepDialog implements StepDialogInter
       }
     };
     shell.getDisplay().asyncExec( fieldLoader );
+  }
+
+  private void cancel() {
+    stepname = null;
+    meta.setChanged( changed );
+    dispose();
+  }
+
+  private void ok() {
+    if ( Const.isEmpty( wStepname.getText() ) ) {
+      return;
+    }
+
+    stepname = wStepname.getText(); // return value
+    
+    getInfo( meta );
+
+    dispose();
   }
 }

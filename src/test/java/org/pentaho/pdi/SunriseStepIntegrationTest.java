@@ -20,7 +20,7 @@
  *
  ******************************************************************************/
 
-package org.pentaho.pdi.pdi_sunrise_plugin;
+package org.pentaho.pdi;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

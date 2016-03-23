@@ -20,7 +20,7 @@
  *
  ******************************************************************************/
 
-package org.pentaho.pdi.pdi_sunrise_plugin;
+package org.pentaho.pdi;
 
 import java.util.Arrays;
 import java.util.HashMap;
