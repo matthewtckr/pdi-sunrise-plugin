@@ -48,8 +48,8 @@
 
     <properties>
 	    <dependency.sunrise.version>1.2</dependency.sunrise.version>
-        <dependency.pentaho-kettle.kettle-core.version>6.1-SNAPSHOT</dependency.pentaho-kettle.kettle-core.version>
-        <dependency.pentaho-metaverse-api>6.1-SNAPSHOT</dependency.pentaho-metaverse-api>
+        <dependency.pentaho-kettle.kettle-core.version>6.1.0.1-196</dependency.pentaho-kettle.kettle-core.version>
+        <dependency.pentaho-metaverse-api>6.1.0.1-196</dependency.pentaho-metaverse-api>
         <!-- Plugin dependencies -->
         <target.jdk.version>1.7</target.jdk.version>
         <plugin.maven-bundle-plugin.version>2.3.7</plugin.maven-bundle-plugin.version>
