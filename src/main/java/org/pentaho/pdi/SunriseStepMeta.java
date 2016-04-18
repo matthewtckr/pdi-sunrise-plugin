@@ -1,34 +1,27 @@
-/*! ******************************************************************************
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Pentaho Data Integration
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
- * Copyright (C) 2016-2016 by Pentaho : http://www.pentaho.com
- *
- *******************************************************************************
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- ******************************************************************************/
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.pentaho.pdi;
 
-package org.pentaho.pdi.pdi_sunrise_plugin;
-
-import java.util.List;
-import java.util.TimeZone;
-
+import org.pentaho.di.core.annotations.Step;
 import org.pentaho.di.core.CheckResult;
 import org.pentaho.di.core.CheckResultInterface;
 import org.pentaho.di.core.Const;
-import org.pentaho.di.core.annotations.Step;
 import org.pentaho.di.core.database.DatabaseMeta;
 import org.pentaho.di.core.exception.KettleException;
 import org.pentaho.di.core.exception.KettlePluginException;
@@ -45,24 +38,28 @@ import org.pentaho.di.repository.Repository;
 import org.pentaho.di.trans.Trans;
 import org.pentaho.di.trans.TransMeta;
 import org.pentaho.di.trans.step.BaseStepMeta;
-import org.pentaho.di.trans.step.StepDataInterface;
 import org.pentaho.di.trans.step.StepInterface;
 import org.pentaho.di.trans.step.StepMeta;
 import org.pentaho.di.trans.step.StepMetaInterface;
+import org.pentaho.di.trans.step.StepDataInterface;
 import org.pentaho.metastore.api.IMetaStore;
 import org.w3c.dom.Node;
 
-@Step(  
-    id = "SunriseCalculator",
-    image = "org/pentaho/pdi/pdi_sunrise_plugin/sunrise.png",
-    i18nPackageName="org.pentaho.pdi.pdi_sunrise_plugin",
-    name="SunriseCalculator.Name",
-    description = "SunriseCalculator.TooltipDesc",
-    categoryDescription="i18n:org.pentaho.di.trans.step:BaseStep.Category.Transform"
+import java.util.List;
+import java.util.TimeZone;
+
+
+@Step(
+  id = "SunriseCalculator",
+  image = "SunriseStep.svg",
+  i18nPackageName="org.pentaho.pdi",
+  name = "SunriseCalculator.Name",
+  description = "SunriseCalculator.TooltipDesc",
+  categoryDescription = "i18n:org.pentaho.di.trans.step:BaseStep.Category.Transform"
 )
 public class SunriseStepMeta extends BaseStepMeta implements StepMetaInterface {
-
-  private static final Class<?> PKG = SunriseStepMeta.class;
+  
+  private static Class<?> PKG = SunriseStep.class; // for i18n purposes, needed by Translator2!!   $NON-NLS-1$
 
   private String inputFieldnameDate;
   private String inputFieldnameLatitude;
@@ -78,28 +75,10 @@ public class SunriseStepMeta extends BaseStepMeta implements StepMetaInterface {
   private String outputFieldnameSunsetNautical;
   private String outputFieldnameSunsetOfficial;
 
-  public void setDefault() {
-    setTimeZone( "GMT" );
-    setOutputFieldnameSunriseAstronomical( "Sunrise_Astronomical" );
-    setOutputFieldnameSunriseCivil( "Sunrise_Civil" );
-    setOutputFieldnameSunriseNautical( "Sunrise_Nautical" );
-    setOutputFieldnameSunriseOfficial( "Sunrise_Official" );
-    setOutputFieldnameSunsetAstronomical( "Sunset_Astronomical" );
-    setOutputFieldnameSunsetCivil( "Sunset_Civil" );
-    setOutputFieldnameSunsetNautical( "Sunset_Nautical" );
-    setOutputFieldnameSunsetOfficial( "Sunset_Official" );
+  public SunriseStepMeta() {
+    super(); // allocate BaseStepMeta
   }
 
-  public StepInterface getStep( StepMeta stepMeta, StepDataInterface stepDataInterface, int copyNr,
-      TransMeta transMeta, Trans trans ) {
-    return new SunriseStep( stepMeta, stepDataInterface, copyNr, transMeta, trans );
-  }
-
-  public StepDataInterface getStepData() {
-    return new SunriseStepData();
-  }
-
-  @Override
   public String getXML() throws KettleException {
     StringBuilder xml = new StringBuilder( super.getXML() );
     xml.append( "  " ).append( XMLHandler.addTagValue( "inputFieldnameDate", inputFieldnameDate ) );
@@ -117,45 +96,16 @@ public class SunriseStepMeta extends BaseStepMeta implements StepMetaInterface {
     return xml.toString();
   }
 
-  @Override
-  public void getFields( RowMetaInterface inputRowMeta, String name, RowMetaInterface[] info, StepMeta nextStep,
-      VariableSpace space, Repository repository, IMetaStore metaStore ) throws KettleStepException {
-    super.getFields( inputRowMeta, name, info, nextStep, space, repository, metaStore );
-    TimeZone outputTZ = TimeZone.getTimeZone( "GMT" );
-    if ( getTimeZone() != null ) {
-      outputTZ = TimeZone.getTimeZone( getTimeZone() );
-    }
-    addFieldToRow( inputRowMeta, outputFieldnameSunriseAstronomical, ValueMetaInterface.TYPE_DATE, outputTZ );
-    addFieldToRow( inputRowMeta, outputFieldnameSunriseCivil, ValueMetaInterface.TYPE_DATE, outputTZ );
-    addFieldToRow( inputRowMeta, outputFieldnameSunriseNautical, ValueMetaInterface.TYPE_DATE, outputTZ );
-    addFieldToRow( inputRowMeta, outputFieldnameSunriseOfficial, ValueMetaInterface.TYPE_DATE, outputTZ );
-    addFieldToRow( inputRowMeta, outputFieldnameSunsetAstronomical, ValueMetaInterface.TYPE_DATE, outputTZ );
-    addFieldToRow( inputRowMeta, outputFieldnameSunsetCivil, ValueMetaInterface.TYPE_DATE, outputTZ );
-    addFieldToRow( inputRowMeta, outputFieldnameSunsetNautical, ValueMetaInterface.TYPE_DATE, outputTZ );
-    addFieldToRow( inputRowMeta, outputFieldnameSunsetOfficial, ValueMetaInterface.TYPE_DATE, outputTZ );
+  public void loadXML(Node stepnode, List<DatabaseMeta> databases, IMetaStore metaStore) throws KettleXMLException {
+    readData(stepnode);
   }
 
-  @Override
-  public void readRep( Repository rep, IMetaStore metaStore, ObjectId id_step, List<DatabaseMeta> databases )
-    throws KettleException {
-    super.readRep( rep, metaStore, id_step, databases );
-    setInputFieldnameDate( rep.getStepAttributeString( id_step, "inputFieldnameDate" ) );
-    setInputFieldnameLatitude( rep.getStepAttributeString( id_step, "inputFieldnameLatitude" ) );
-    setInputFieldnameLongitude( rep.getStepAttributeString( id_step, "inputFieldnameLongitude" ) );
-    setTimeZone( rep.getStepAttributeString( id_step, "timeZone" ) );
-    setOutputFieldnameSunriseAstronomical( rep.getStepAttributeString( id_step, "outputFieldnameSunriseAstronomical" ) );
-    setOutputFieldnameSunriseCivil( rep.getStepAttributeString( id_step, "outputFieldnameSunriseCivil" ) );
-    setOutputFieldnameSunriseNautical( rep.getStepAttributeString( id_step, "outputFieldnameSunriseNautical" ) );
-    setOutputFieldnameSunriseOfficial( rep.getStepAttributeString( id_step, "outputFieldnameSunriseOfficial" ) );
-    setOutputFieldnameSunsetAstronomical( rep.getStepAttributeString( id_step, "outputFieldnameSunsetAstronomical" ) );
-    setOutputFieldnameSunsetCivil( rep.getStepAttributeString( id_step, "outputFieldnameSunsetCivil" ) );
-    setOutputFieldnameSunsetNautical( rep.getStepAttributeString( id_step, "outputFieldnameSunsetNautical" ) );
-    setOutputFieldnameSunsetOfficial( rep.getStepAttributeString( id_step, "outputFieldnameSunsetOfficial" ) );
+  public Object clone() {
+    Object retval = super.clone();
+    return retval;
   }
-
-  @Override
-  public void loadXML( Node stepnode, List<DatabaseMeta> databases, IMetaStore metaStore ) throws KettleXMLException {
-    super.loadXML( stepnode, databases, metaStore );
+  
+  private void readData(Node stepnode) {
     setInputFieldnameDate( XMLHandler.getTagValue( stepnode, "inputFieldnameDate" ) );
     setInputFieldnameLatitude( XMLHandler.getTagValue( stepnode, "inputFieldnameLatitude" ) );
     setInputFieldnameLongitude( XMLHandler.getTagValue( stepnode, "inputFieldnameLongitude" ) );
@@ -170,8 +120,35 @@ public class SunriseStepMeta extends BaseStepMeta implements StepMetaInterface {
     setOutputFieldnameSunsetOfficial( XMLHandler.getTagValue( stepnode, "outputFieldnameSunsetOfficial" ) );
   }
 
-  @Override
-  public void saveRep( Repository rep, IMetaStore metaStore, ObjectId id_transformation, ObjectId id_step )
+  public void setDefault() {
+    setTimeZone( "GMT" );
+    setOutputFieldnameSunriseAstronomical( "Sunrise_Astronomical" );
+    setOutputFieldnameSunriseCivil( "Sunrise_Civil" );
+    setOutputFieldnameSunriseNautical( "Sunrise_Nautical" );
+    setOutputFieldnameSunriseOfficial( "Sunrise_Official" );
+    setOutputFieldnameSunsetAstronomical( "Sunset_Astronomical" );
+    setOutputFieldnameSunsetCivil( "Sunset_Civil" );
+    setOutputFieldnameSunsetNautical( "Sunset_Nautical" );
+    setOutputFieldnameSunsetOfficial( "Sunset_Official" );
+  }
+
+  public void readRep(Repository rep, IMetaStore metaStore, ObjectId id_step, List<DatabaseMeta> databases) throws KettleException {
+    super.readRep( rep, metaStore, id_step, databases );
+    setInputFieldnameDate( rep.getStepAttributeString( id_step, "inputFieldnameDate" ) );
+    setInputFieldnameLatitude( rep.getStepAttributeString( id_step, "inputFieldnameLatitude" ) );
+    setInputFieldnameLongitude( rep.getStepAttributeString( id_step, "inputFieldnameLongitude" ) );
+    setTimeZone( rep.getStepAttributeString( id_step, "timeZone" ) );
+    setOutputFieldnameSunriseAstronomical( rep.getStepAttributeString( id_step, "outputFieldnameSunriseAstronomical" ) );
+    setOutputFieldnameSunriseCivil( rep.getStepAttributeString( id_step, "outputFieldnameSunriseCivil" ) );
+    setOutputFieldnameSunriseNautical( rep.getStepAttributeString( id_step, "outputFieldnameSunriseNautical" ) );
+    setOutputFieldnameSunriseOfficial( rep.getStepAttributeString( id_step, "outputFieldnameSunriseOfficial" ) );
+    setOutputFieldnameSunsetAstronomical( rep.getStepAttributeString( id_step, "outputFieldnameSunsetAstronomical" ) );
+    setOutputFieldnameSunsetCivil( rep.getStepAttributeString( id_step, "outputFieldnameSunsetCivil" ) );
+    setOutputFieldnameSunsetNautical( rep.getStepAttributeString( id_step, "outputFieldnameSunsetNautical" ) );
+    setOutputFieldnameSunsetOfficial( rep.getStepAttributeString( id_step, "outputFieldnameSunsetOfficial" ) );
+  }
+  
+  public void saveRep(Repository rep, IMetaStore metaStore, ObjectId id_transformation, ObjectId id_step)
     throws KettleException {
     super.saveRep( rep, metaStore, id_transformation, id_step );
     rep.saveStepAttribute( id_transformation, id_step, "inputFieldnameDate", inputFieldnameDate );
@@ -187,56 +164,101 @@ public class SunriseStepMeta extends BaseStepMeta implements StepMetaInterface {
     rep.saveStepAttribute( id_transformation, id_step, "outputFieldnameSunsetNautical", outputFieldnameSunsetNautical );
     rep.saveStepAttribute( id_transformation, id_step, "outputFieldnameSunsetOfficial", outputFieldnameSunsetOfficial );
   }
-
-  @Override
-  public void check( List<CheckResultInterface> remarks, TransMeta transMeta, StepMeta stepMeta, RowMetaInterface prev,
-      String[] input, String[] output, RowMetaInterface info, VariableSpace space, Repository repository,
-      IMetaStore metaStore ) {
-    super.check( remarks, transMeta, stepMeta, prev, input, output, info, space, repository, metaStore );
+  
+  public void getFields(RowMetaInterface rowMeta, String origin, RowMetaInterface[] info, StepMeta nextStep, 
+    VariableSpace space, Repository repository, IMetaStore metaStore) throws KettleStepException {
+    super.getFields( rowMeta, origin, info, nextStep, space, repository, metaStore );
+    TimeZone outputTZ = TimeZone.getTimeZone( "GMT" );
+    if ( getTimeZone() != null ) {
+      outputTZ = TimeZone.getTimeZone( getTimeZone() );
+    }
+    addFieldToRow( rowMeta, outputFieldnameSunriseAstronomical, ValueMetaInterface.TYPE_DATE, outputTZ );
+    addFieldToRow( rowMeta, outputFieldnameSunriseCivil, ValueMetaInterface.TYPE_DATE, outputTZ );
+    addFieldToRow( rowMeta, outputFieldnameSunriseNautical, ValueMetaInterface.TYPE_DATE, outputTZ );
+    addFieldToRow( rowMeta, outputFieldnameSunriseOfficial, ValueMetaInterface.TYPE_DATE, outputTZ );
+    addFieldToRow( rowMeta, outputFieldnameSunsetAstronomical, ValueMetaInterface.TYPE_DATE, outputTZ );
+    addFieldToRow( rowMeta, outputFieldnameSunsetCivil, ValueMetaInterface.TYPE_DATE, outputTZ );
+    addFieldToRow( rowMeta, outputFieldnameSunsetNautical, ValueMetaInterface.TYPE_DATE, outputTZ );
+    addFieldToRow( rowMeta, outputFieldnameSunsetOfficial, ValueMetaInterface.TYPE_DATE, outputTZ );
+  }
+  
+  public void check(List<CheckResultInterface> remarks, TransMeta transMeta, 
+    StepMeta stepMeta, RowMetaInterface prev, String input[], String output[],
+    RowMetaInterface info, VariableSpace space, Repository repository, 
+    IMetaStore metaStore) {
     CheckResult cr;
-
+    if ( prev==null || prev.size()==0 ) {
+      cr = new CheckResult(CheckResultInterface.TYPE_RESULT_WARNING, BaseMessages.getString(PKG, "SunriseStepMeta.CheckResult.NotReceivingFields"), stepMeta); 
+      remarks.add(cr);
+    }
+    else {
+      cr = new CheckResult(CheckResultInterface.TYPE_RESULT_OK, BaseMessages.getString(PKG, "SunriseStepMeta.CheckResult.StepRecevingData",prev.size()+""), stepMeta);  
+      remarks.add(cr);
+    }
+    
+    // See if we have input streams leading to this step!
+    if ( input.length > 0 ) {
+      cr = new CheckResult(CheckResultInterface.TYPE_RESULT_OK, BaseMessages.getString(PKG, "SunriseStepMeta.CheckResult.StepRecevingData2"), stepMeta); 
+      remarks.add(cr);
+    }
+    else {
+      cr = new CheckResult(CheckResultInterface.TYPE_RESULT_ERROR, BaseMessages.getString(PKG, "SunriseStepMeta.CheckResult.NoInputReceivedFromOtherSteps"), stepMeta); 
+      remarks.add(cr);
+    }
     if ( Const.isEmpty( getInputFieldnameDate() ) || prev.indexOfValue( getInputFieldnameDate() ) < 0  ) {
       cr =
         new CheckResult( CheckResult.TYPE_RESULT_ERROR, BaseMessages.getString(
-          PKG, "SunriseStep.CheckResult.InputDateMissing" ), stepMeta );
+          PKG, "SunriseStepMeta.CheckResult.InputDateMissing" ), stepMeta );
     } else {
       cr =
         new CheckResult( CheckResult.TYPE_RESULT_OK, BaseMessages.getString(
-          PKG, "SunriseStep.CheckResult.InputDateOK" ), stepMeta );
+          PKG, "SunriseStepMeta.CheckResult.InputDateOK" ), stepMeta );
     }
     remarks.add( cr );
 
     if ( Const.isEmpty( getInputFieldnameLatitude() ) || prev.indexOfValue( getInputFieldnameLatitude() ) < 0  ) {
       cr =
         new CheckResult( CheckResult.TYPE_RESULT_ERROR, BaseMessages.getString(
-          PKG, "SunriseStep.CheckResult.InputLatitudeMissing" ), stepMeta );
+          PKG, "SunriseStepMeta.CheckResult.InputLatitudeMissing" ), stepMeta );
     } else {
       cr =
         new CheckResult( CheckResult.TYPE_RESULT_OK, BaseMessages.getString(
-          PKG, "SunriseStep.CheckResult.InputLatitudeOK" ), stepMeta );
+          PKG, "SunriseStepMeta.CheckResult.InputLatitudeOK" ), stepMeta );
     }
     remarks.add( cr );
 
     if ( Const.isEmpty( getInputFieldnameLongitude() ) || prev.indexOfValue( getInputFieldnameLongitude() ) < 0  ) {
       cr =
         new CheckResult( CheckResult.TYPE_RESULT_ERROR, BaseMessages.getString(
-          PKG, "SunriseStep.CheckResult.InputLongitudeMissing" ), stepMeta );
+          PKG, "SunriseStepMeta.CheckResult.InputLongitudeMissing" ), stepMeta );
     } else {
       cr =
         new CheckResult( CheckResult.TYPE_RESULT_OK, BaseMessages.getString(
-          PKG, "SunriseStep.CheckResult.InputLongitudeOK" ), stepMeta );
+          PKG, "SunriseStepMeta.CheckResult.InputLongitudeOK" ), stepMeta );
     }
     remarks.add( cr );
 
     if ( Const.isEmpty( getTimeZone() ) ) {
       cr =
         new CheckResult( CheckResult.TYPE_RESULT_WARNING, BaseMessages.getString(
-          PKG, "SunriseStep.CheckResult.TimeZoneNotSpecified" ), stepMeta );
+          PKG, "SunriseStepMeta.CheckResult.TimeZoneNotSpecified" ), stepMeta );
     } else {
       cr =
         new CheckResult( CheckResult.TYPE_RESULT_OK, BaseMessages.getString(
-          PKG, "SunriseStep.CheckResult.TimeZoneSpecified" ), stepMeta );
+          PKG, "SunriseStepMeta.CheckResult.TimeZoneSpecified" ), stepMeta );
     }
+  }
+  
+  public StepInterface getStep(StepMeta stepMeta, StepDataInterface stepDataInterface, int cnr, TransMeta tr, Trans trans) {
+    return new SunriseStep(stepMeta, stepDataInterface, cnr, tr, trans);
+  }
+  
+  public StepDataInterface getStepData() {
+    return new SunriseStepData();
+  }
+
+  public String getDialogClassName() {
+    return "org.pentaho.pdi.SunriseStepDialog";
   }
 
   public String getInputFieldnameDate() {
@@ -346,7 +368,7 @@ public class SunriseStepMeta extends BaseStepMeta implements StepMetaInterface {
         row.addValueMeta( value );
       } catch ( KettlePluginException e ) {
         throw new KettleStepException( BaseMessages.getString( PKG,
-          "SunriseCalculatorMeta.ValueMetaInterfaceCreation", fieldName ), e );
+          "SunriseStepMeta.ValueMetaInterfaceCreation", fieldName ), e );
       }
     }
   }
