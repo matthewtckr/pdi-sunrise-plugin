@@ -23,7 +23,7 @@
 
     <groupId>org.pentaho.pdi</groupId>
     <artifactId>SunriseCalculator</artifactId>
-    <version>0.0.3</version>
+    <version>0.0.4-SNAPSHOT</version>
     <packaging>bundle</packaging>
 
     <name>SunriseCalculator Bundle</name>
