@@ -6,7 +6,7 @@
              http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
              http://www.pentaho.com/xml/schemas/pentaho-blueprint http://www.pentaho.com/xml/schemas/pentaho-blueprint.xsd">
 
-    <bean id="SunriseStepMeta" class="org.pentaho.pdi.SunriseStepMeta" scope="prototype"/>
+    <bean id="SunriseStepMeta" class="com.github.matthewtckr.pdi.SunriseStepMeta" scope="prototype"/>
     <bean id="SunriseStepPlugin" class="org.pentaho.di.osgi.OSGIPlugin" scope="prototype">
         <property name="mainType" value="org.pentaho.di.trans.step.StepMetaInterface"/>
         <property name="name" value="Sunrise Calculator"/>
@@ -26,9 +26,9 @@
             <entry key="PluginType" value="org.pentaho.di.core.plugins.StepPluginType"/>
         </service-properties>
     </service>
-  <!--<bean id="SunriseStepData" class="org.pentaho.pdi.SunriseStepData" scope="prototype"/>
+  <!--<bean id="SunriseStepData" class="com.github.matthewtckr.pdi.SunriseStepData" scope="prototype"/>
 
-  <bean id="SunriseStepBean" class="org.pentaho.pdi.SunriseStepMeta" scope="prototype">
+  <bean id="SunriseStepBean" class="com.github.matthewtckr.pdi.SunriseStepMeta" scope="prototype">
     <pen:di-plugin type="org.pentaho.di.core.plugins.StepPluginType">
     	<pen:di-plugin-mapping class="org.pentaho.di.trans.step.StepDataInterface" ref="SunriseStepData"/>
     </pen:di-plugin>

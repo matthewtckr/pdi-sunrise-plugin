@@ -1,7 +1,7 @@
 <features xmlns="http://karaf.apache.org/xmlns/features/v1.0.0">
 
-  <feature name="SunriseCalculator-feature" version="0.0.3-SNAPSHOT">
-    <bundle>mvn:org.pentaho.pdi/SunriseCalculator/0.0.3-SNAPSHOT</bundle>
+  <feature name="SunriseCalculator-feature" version="0.0.4-SNAPSHOT">
+    <bundle>mvn:com.github.matthewtckr/SunriseCalculator/0.0.4-SNAPSHOT</bundle>
     <bundle>wrap:mvn:com.luckycatlabs/SunriseSunsetCalculator/1.2</bundle>
   </feature>
 
