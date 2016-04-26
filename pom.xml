@@ -21,7 +21,7 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.pentaho.pdi</groupId>
+    <groupId>com.github.matthewtckr</groupId>
     <artifactId>SunriseCalculator</artifactId>
     <version>0.0.4-SNAPSHOT</version>
     <packaging>bundle</packaging>

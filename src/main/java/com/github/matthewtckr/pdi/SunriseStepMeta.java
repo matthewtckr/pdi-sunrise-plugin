@@ -16,7 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.pentaho.pdi;
+
+package com.github.matthewtckr.pdi;
 
 import org.pentaho.di.core.annotations.Step;
 import org.pentaho.di.core.CheckResult;

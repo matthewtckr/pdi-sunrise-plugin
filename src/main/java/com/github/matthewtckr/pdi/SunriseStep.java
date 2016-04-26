@@ -16,7 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.pentaho.pdi;
+
+package com.github.matthewtckr.pdi;
 
 import java.util.Date;
 
@@ -31,18 +32,19 @@ import org.pentaho.di.trans.step.StepDataInterface;
 import org.pentaho.di.trans.step.StepInterface;
 import org.pentaho.di.trans.step.StepMeta;
 import org.pentaho.di.trans.step.StepMetaInterface;
-import org.pentaho.pdi.SunriseStepData;
-import org.pentaho.pdi.SunriseStepMeta;
+
+import com.github.matthewtckr.pdi.SunriseStepData;
+import com.github.matthewtckr.pdi.SunriseStepMeta;
 
 public class SunriseStep extends BaseStep implements StepInterface {
 	
-	private static Class<?> PKG = SunriseStepMeta.class; // for i18n purposes, needed by Translator2!!   $NON-NLS-1$
+  private static Class<?> PKG = SunriseStepMeta.class; // for i18n purposes, needed by Translator2!!   $NON-NLS-1$
   private SunriseStepMeta meta;
   private SunriseStepData data;
 
-	public SunriseStep(StepMeta stepMeta, StepDataInterface stepDataInterface, int copyNr, TransMeta transMeta,
-		Trans trans) {
-		super(stepMeta, stepDataInterface, copyNr, transMeta, trans);
+	public SunriseStep( StepMeta stepMeta, StepDataInterface stepDataInterface, int copyNr, TransMeta transMeta,
+      Trans trans ) {
+    super( stepMeta, stepDataInterface, copyNr, transMeta, trans );
 	}
 	
 	/**
@@ -62,8 +64,7 @@ public class SunriseStep extends BaseStep implements StepInterface {
       return true;
     }
 
-	public boolean processRow(StepMetaInterface smi, StepDataInterface sdi) throws KettleException
-	{
+	public boolean processRow( StepMetaInterface smi, StepDataInterface sdi ) throws KettleException {
 	  Object[] row = getRow();
 
     if ( row == null ) {
