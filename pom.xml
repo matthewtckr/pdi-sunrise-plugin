@@ -56,7 +56,7 @@
         <plugin.maven-compiler-plugin.version>3.1</plugin.maven-compiler-plugin.version>
         <mockito.version>1.9.5</mockito.version>
         <guava.version>17.0</guava.version>
-        <dependency.junit.version>4.7</dependency.junit.version>
+        <dependency.junit.version>4.12</dependency.junit.version>
     </properties>
 
     <dependencies>
